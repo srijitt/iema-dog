@@ -6,32 +6,8 @@ import { useEffect, useState } from "react";
 
 export default function Index() {
 
-  const ws = new WebSocket('ws://192.168.60.11:8080');
+  const ws = new WebSocket('ws://192.168.110.129:8765');
   const [connected, setConnected] = useState(false);
-
-  const requestBluetoothPermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: 'Bluetooth Scanning Permission',
-            message: 'This app needs access to your location to scan for Bluetooth devices.',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          }
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('Bluetooth permission granted');
-        } else {
-          console.log('Bluetooth permission denied');
-        }
-      } catch (error) {
-        console.error('Error requesting Bluetooth permission:', error);
-      }
-    }
-  };
 
   const sendMoveForward = () => {
     ws.send('1');
@@ -48,6 +24,10 @@ export default function Index() {
   const sendMoveBackward = () => {
     ws.send('2');
   };
+
+  const sendHandshake = () => {
+    ws.send('0');
+  }
 
   const connectSocket = () => {
     ws.onopen = () => {
@@ -77,7 +57,7 @@ export default function Index() {
               resizeMode='contain' />
           </View>
 
-          <Text className="text-lg font-bold text-secondary-200">
+          <Text className="text-lg font-pextrabold text-secondary-200">
             IEMA R&D
           </Text>
         </View>
@@ -85,24 +65,24 @@ export default function Index() {
       </View>
 
       <View className="flex flex-col justify-center items-start min-h-[120px] bg-main shadow-xl shadow-black pl-10 rounded-lg w-[95%]">
-        <Text className="text-lg font-medium text-white">Device Name: Robotic Dog</Text>
+        <Text className="text-lg font-pmedium text-white">Device Name: Robotic Dog</Text>
         <View className='flex flex-row justify-center items-center'>
-          <Text className='text-lg text-white'>Status: Connected</Text>
+          <Text className='text-lg font-pregular text-white'>Status: Connected</Text>
         </View>
 
       </View>
 
-      <View className="flex flex-col justify-center items-center mt-16 space-y-16 w-full">
+      <View className="flex flex-col justify-center items-center mt-16 space-y-12 w-full">
         <CustomButton handlePress={sendMoveForward} icon={icons.up} />
 
         <View className="flex flex-row justify-between items-center w-[88%]">
-          <CustomButton handlePress={sendMoveLeft} icon={icons.left} />
+          <CustomButton handlePress={sendMoveLeft} icon={icons.sit} />
 
-          {/* <TouchableOpacity onPressIn={disconnectSocket} activeOpacity={0.6} className="bg-main rounded-full w-32 h-32 flex justify-center items-center">
-            <Image source={icon} className="w-8 h-8" resizeMode='contain' />
-          </TouchableOpacity> */}
+          <TouchableOpacity onPressIn={sendHandshake} activeOpacity={0.6} className="bg-main rounded-full w-28 h-28 flex justify-center items-center">
+            <Image source={icons.hand} className="w-12 h-12" resizeMode='contain' />
+          </TouchableOpacity>
 
-          <CustomButton handlePress={sendMoveRight} icon={icons.right} />
+          <CustomButton handlePress={sendMoveRight} icon={icons.stand} />
         </View>
 
         <View className="flex flex-row justify-center">
